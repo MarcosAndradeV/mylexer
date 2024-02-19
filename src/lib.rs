@@ -3,9 +3,7 @@ mod tests;
 
 use core::fmt;
 use std::{
-    fs::File,
-    io::{self, Read},
-    path::PathBuf,
+    env::Args, fs::File, io::{self, Read}, path::PathBuf
 };
 
 pub fn read_file_to_bytes(filepath: PathBuf) -> io::Result<Vec<u8>> {
@@ -93,6 +91,13 @@ impl Lexer {
             position: 0,
             col: 1,
             row: 1,
+        }
+    }
+    pub fn from_args(args: Args) -> Self {
+        if let Some(s) = args.reduce(|acc, a| format!("{} {}", acc, a)) {
+            Self::new(s.into_bytes())
+        } else {
+            Self::new(vec![])
         }
     }
 
