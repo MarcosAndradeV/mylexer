@@ -96,10 +96,6 @@ impl Lexer {
         }
     }
 
-    pub fn next_token(&mut self) -> Token {
-        self.next_regular_token()
-    }
-
     fn current_byte(&self) -> u8 {
         if self.has_next() {
             self.input[self.position]
@@ -131,9 +127,9 @@ impl Lexer {
         self.position < self.max_position
     }
 
-    fn next_regular_token(&mut self) -> Token {
+    pub fn next(&mut self) -> Token {
         match self.current_byte() {
-            ch if ch.is_ascii_alphabetic() || ch == b'_' || ch == b'-' => {
+            ch if ch.is_ascii_alphabetic() || ch == b'_' => {
                 self.identifier(self.position)
             }
             ch if ch.is_ascii_digit() => self.number(),
@@ -198,7 +194,7 @@ impl Lexer {
     fn identifier(&mut self, start: usize) -> Token {
         loop {
             let ch = self.current_byte();
-            if !(ch.is_ascii_alphabetic() || ch == b'_' || ch == b'-') {
+            if !(ch.is_ascii_alphabetic() || ch == b'_') {
                 break;
             }
             self.position += 1
